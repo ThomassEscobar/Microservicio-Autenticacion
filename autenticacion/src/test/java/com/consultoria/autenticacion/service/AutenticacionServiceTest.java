@@ -3,11 +3,14 @@ package com.consultoria.autenticacion.service;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -44,7 +47,7 @@ class AutenticacionServiceTest {
     @Test
     void save_ok() {
         AutenticacionDTO dto = new AutenticacionDTO(
-                1L, "user", "mail@test.com", "123", "ADMIN", "TI"
+            1L, "user", "mail@test.com", "123", "ADMIN", "TI"
         );
 
         Autenticacion saved = new Autenticacion();
@@ -59,9 +62,15 @@ class AutenticacionServiceTest {
 
         AutenticacionDTO result = service.sabe(dto);
 
+        assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals("user", result.getUsername());
+        assertEquals("mail@test.com", result.getEmail());
+        assertEquals("123", result.getRut());
         assertEquals("ADMIN", result.getRol());
+        assertEquals("TI", result.getArea());
+
+        verify(repo, times(1)).save(any(Autenticacion.class));
     }
 
     @Test
@@ -75,8 +84,10 @@ class AutenticacionServiceTest {
 
         var result = service.findByUser("john");
 
+        assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals("john", result.get(0).getUsername());
+        assertEquals("USER", result.get(0).getRol());
         assertEquals("FIN", result.get(0).getArea());
     }
 }

@@ -28,33 +28,35 @@ public class AutenticacionService {
             }).collect(Collectors.toList());
     }
     public AutenticacionDTO sabe(AutenticacionDTO dto){
-        Autenticacion au = new Autenticacion();
-        au.setId(dto.getId());
-        au.setArea(dto.getArea());
-        au.setEmail(dto.getEmail());
-        au.setUsername(dto.getUsername());
-        au.setRol(dto.getRol());
-        au.setRut(dto.getRut());
-        Autenticacion guardar = repo.save(au);
-        return new AutenticacionDTO(
-            guardar.getId(),
-            guardar.getArea(),
-            guardar.getEmail(),
-            guardar.getRol(),
-            guardar.getUsername(),
-            guardar.getRut()
-        );
-    }
-    public List<AutenticacionResponseDTO> findByUser(String username){
-        List<Autenticacion> buscar = repo.findByUsername(username);
+    Autenticacion au = new Autenticacion();
+    au.setId(dto.getId());
+    au.setArea(dto.getArea());
+    au.setEmail(dto.getEmail());
+    au.setUsername(dto.getUsername());
+    au.setRol(dto.getRol());
+    au.setRut(dto.getRut());
 
-        return buscar.stream().map(au ->
-            new AutenticacionResponseDTO(
-                au.getUsername(),
-                au.getArea(),
-                au.getRol()
-            )
-        ).toList();
-    }
+    Autenticacion guardar = repo.save(au);
+
+    return new AutenticacionDTO(
+        guardar.getId(),
+        guardar.getUsername(),
+        guardar.getEmail(),
+        guardar.getRut(),
+        guardar.getRol(),
+        guardar.getArea()
+    );
+}
+    public List<AutenticacionResponseDTO> findByUser(String username){
+    List<Autenticacion> buscar = repo.findByUsername(username);
+
+    return buscar.stream().map(au ->
+        new AutenticacionResponseDTO(
+            au.getUsername(),
+            au.getRol(),
+            au.getArea()
+        )
+    ).toList();
+}
 
 }
